@@ -156,3 +156,8 @@ if(SIMPLEBLUEZ_TEST)
         COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/test/python/ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     )
 endif()
+
+if(DBUS_USE_SESSION)
+    # This if statement seems to be cached?
+    add_definitions (-DDBUS_USE_SESSION)
+endif()

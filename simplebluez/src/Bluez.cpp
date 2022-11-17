@@ -6,6 +6,17 @@
 
 using namespace SimpleBluez;
 
+#if defined(DBUS_USE_SESSION)
+Bluez::Bluez() : Proxy(std::make_shared<SimpleDBus::Connection>(DBUS_BUS_SESSION), "org.bluez", "/") {
+    _interfaces["org.freedesktop.DBus.ObjectManager"] = std::static_pointer_cast<SimpleDBus::Interface>(
+        std::make_shared<SimpleDBus::ObjectManager>(_conn, "org.bluez", "/"));
+
+    object_manager()->InterfacesAdded = [&](std::string path, SimpleDBus::Holder options) { path_add(path, options); };
+    object_manager()->InterfacesRemoved = [&](std::string path, SimpleDBus::Holder options) {
+        path_remove(path, options);
+    };
+}
+#else
 Bluez::Bluez() : Proxy(std::make_shared<SimpleDBus::Connection>(DBUS_BUS_SYSTEM), "org.bluez", "/") {
     _interfaces["org.freedesktop.DBus.ObjectManager"] = std::static_pointer_cast<SimpleDBus::Interface>(
         std::make_shared<SimpleDBus::ObjectManager>(_conn, "org.bluez", "/"));
@@ -15,6 +26,7 @@ Bluez::Bluez() : Proxy(std::make_shared<SimpleDBus::Connection>(DBUS_BUS_SYSTEM)
         path_remove(path, options);
     };
 }
+#endif
 
 Bluez::~Bluez() { _conn->remove_match("type='signal',sender='org.bluez'"); }
 

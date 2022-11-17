@@ -334,3 +334,8 @@ if(SIMPLEBLE_TEST)
 
     target_link_libraries(simpleble_test PRIVATE simpleble::simpleble GTest::gtest)
 endif()
+
+if(DBUS_USE_SESSION)
+    # This if statement seems to be cached?
+    add_definitions (-DDBUS_USE_SESSION)
+endif()
