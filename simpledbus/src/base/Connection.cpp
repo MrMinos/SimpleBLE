@@ -143,7 +143,7 @@ Message Connection::send_with_reply_and_block(Message& msg) {
 
     ::DBusError err;
     dbus_error_init(&err);
-    DBusMessage* msg_tmp = dbus_connection_send_with_reply_and_block(_conn, msg._msg, -1, &err);
+    DBusMessage* msg_tmp = dbus_connection_send_with_reply_and_block(_conn, msg._msg, 60, &err);
 
     if (dbus_error_is_set(&err)) {
         std::string err_name = err.name;
